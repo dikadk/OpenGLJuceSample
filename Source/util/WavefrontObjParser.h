@@ -276,10 +276,10 @@ private:
         {
             auto l = lines[lineNum].getCharPointer().findEndOfWhitespace();
 
-            if (matchToken (l, "v"))    { mesh.vertices     .add (parseVertex (l));       continue; }
-            if (matchToken (l, "vn"))   { mesh.normals      .add (parseVertex (l));       continue; }
+            if (matchToken (l, "v"))    { mesh.vertices.add (parseVertex (l));            continue; }
+            if (matchToken (l, "vn"))   { mesh.normals.add (parseVertex (l));             continue; }
             if (matchToken (l, "vt"))   { mesh.textureCoords.add (parseTextureCoord (l)); continue; }
-            if (matchToken (l, "f"))    { faceGroup         .add (Face (l));              continue; }
+            if (matchToken (l, "f"))    { faceGroup.add (Face (l));                       continue; }
 
             if (matchToken (l, "usemtl"))
             {
@@ -287,9 +287,9 @@ private:
 
                 for (auto i = knownMaterials.size(); --i >= 0;)
                 {
-                    if (knownMaterials.getReference (i).name == name)
+                    if (knownMaterials.getReference(i).name == name)
                     {
-                        lastMaterial = knownMaterials.getReference (i);
+                        lastMaterial = knownMaterials.getReference(i);
                         break;
                     }
                 }
@@ -299,13 +299,13 @@ private:
 
             if (matchToken (l, "mtllib"))
             {
-                auto r = parseMaterial (knownMaterials, String (l).trim());
+                Result r = parseMaterial (knownMaterials, String (l).trim());
                 continue;
             }
 
             if (matchToken (l, "g") || matchToken (l, "o"))
             {
-                if (auto* shape = parseFaceGroup (mesh, faceGroup, lastMaterial, lastName))
+                if (Shape* shape = parseFaceGroup (mesh, faceGroup, lastMaterial, lastName))
                     shapes.add (shape);
 
                 faceGroup.clear();

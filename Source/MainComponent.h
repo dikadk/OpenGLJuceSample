@@ -16,7 +16,7 @@
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
-class MainComponent   : public AnimatedAppComponent
+class MainComponent   : public Component
 {
 public:
     //==============================================================================
@@ -24,7 +24,7 @@ public:
     ~MainComponent();
 
     //==============================================================================
-    void update() override;
+    //void update() override;
 
     //==============================================================================
     void paint (Graphics& g) override;

@@ -23,7 +23,7 @@ OpenGLComponent::~OpenGLComponent() {
 }
 
 void OpenGLComponent::paint(Graphics &g) {
-
+    g.drawRect(5,5, 10, 10, 10);
 }
 
 void OpenGLComponent::resized() {
@@ -48,6 +48,27 @@ void OpenGLComponent::render() {
     jassert (OpenGLHelpers::isContextActive());
 
     auto desktopScale = (float) openGLContext.getRenderingScale();
+    OpenGLHelpers::clear(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glViewport(0, 0,
+               roundToInt(desktopScale * getWidth()),
+               roundToInt(desktopScale * getHeight()));
+    shader->use();
+
+    if (uniforms->projectionMatrix.get() != nullptr)
+        uniforms->projectionMatrix->setMatrix4(getProjectionMatrix().mat, 1, false);
+    if (uniforms->viewMatrix.get() != nullptr)
+        uniforms->viewMatrix->setMatrix4(getViewMatrix().mat, 1, false);
+    if (uniforms->time.get() != nullptr)
+        uniforms->time->set(, 1, false);
+
+    shape->draw(openGLContext, *attributes);
+
+    openGLContext.extensions.glBindBuffer(GL_ARRAY_BUFFER, 0);
+    openGLContext.extensions.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void OpenGLComponent::createShaders(const char *vertexShaderPath, const char *fragmentShaderPath) {
@@ -70,7 +91,7 @@ void OpenGLComponent::createShaders(const char *vertexShaderPath, const char *fr
         shader.reset(newShader.release());
         shader->use();
 
-        shape.reset(new Shape(openGLContext));
+        shape.reset(new Shape(openGLContext, "teapot.obj"));
         attributes.reset(new Attributes(openGLContext, *shader));
         uniforms.reset(new Uniforms(openGLContext, *shader));
 

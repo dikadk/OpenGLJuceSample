@@ -12,8 +12,8 @@
 MainComponent::MainComponent() {
     // Make sure you set the size of the component after
     // you add any child components.
-    setSize(400, 300);
-    setFramesPerSecond(60); // This sets the frequency of the update calls.
+    setSize(800, 600);
+    //setFramesPerSecond(60); // This sets the frequency of the update calls.
 
 
     addAndMakeVisible(glComponent);
@@ -23,9 +23,9 @@ MainComponent::~MainComponent() {
 }
 
 //==============================================================================
-void MainComponent::update() {
+/*void MainComponent::update() {
 
-}
+}*/
 
 //==============================================================================
 void MainComponent::paint(Graphics &g) {
